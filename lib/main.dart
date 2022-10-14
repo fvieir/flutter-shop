@@ -14,7 +14,14 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: Colors.purple,
+          secondary: Colors.deepOrange,
+        ),
+        fontFamily: 'Lato',
+        textTheme: ThemeData.light().textTheme.copyWith(
+              titleLarge: const TextStyle(fontSize: 20),
+            ),
       ),
       home: const ProductOverview(),
     );
