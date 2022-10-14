@@ -3,8 +3,8 @@ import 'package:shop/components/product_item.dart';
 import 'package:shop/data/dummy_data.dart';
 import 'package:shop/models/product.dart';
 
-class ProductOverview extends StatelessWidget {
-  const ProductOverview({super.key});
+class ProductOverviewPage extends StatelessWidget {
+  const ProductOverviewPage({super.key});
 
   @override
   Widget build(BuildContext context) {
