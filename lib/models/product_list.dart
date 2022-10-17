@@ -8,9 +8,7 @@ class ProductList with ChangeNotifier {
   // Retornando uma copia de items.
   // Quando usa return _items, esta passando a referencia, assim os valores
   // podem ser alterados dentro da classe;
-  List<Product> get items {
-    return [..._items];
-  }
+  List<Product> get items => [..._items];
 
   void addProduct(Product product) {
     _items.add(product);
