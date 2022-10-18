@@ -3,12 +3,15 @@ import 'package:provider/provider.dart';
 import 'package:shop/models/product.dart';
 import 'package:shop/utils/app_routes.dart';
 
+import '../models/cart.dart';
+
 class ProductItem extends StatelessWidget {
   const ProductItem({super.key});
 
   @override
   Widget build(BuildContext context) {
     final Product product = Provider.of<Product>(context);
+    final Cart cart = Provider.of<Cart>(context);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -34,7 +37,9 @@ class ProductItem extends StatelessWidget {
               Icons.shopping_cart,
               color: Theme.of(context).colorScheme.secondary,
             ),
-            onPressed: () {},
+            onPressed: () {
+              cart.addItem(product);
+            },
           ),
         ),
         child: GestureDetector(
