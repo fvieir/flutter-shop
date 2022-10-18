@@ -35,7 +35,10 @@ class MyApp extends StatelessWidget {
           ),
           fontFamily: 'Lato',
           textTheme: ThemeData.light().textTheme.copyWith(
-                titleLarge: const TextStyle(fontSize: 20),
+                titleLarge: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
               ),
         ),
         home: const ProductOverviewPage(),
