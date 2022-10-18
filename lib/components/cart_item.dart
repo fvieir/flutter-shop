@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../models/cart.dart';
 import '../models/cart_item.dart';
 
 class CartItemWidget extends StatelessWidget {
@@ -8,24 +10,45 @@ class CartItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListTile(
-          leading: CircleAvatar(
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            foregroundColor: Theme.of(context).textTheme.titleLarge?.color,
-            child: Padding(
-              padding: const EdgeInsets.all(5),
-              child: FittedBox(
-                child: Text('R\$${cartItem.price}'),
+    return Dismissible(
+      key: ValueKey(cartItem.id),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        color: Theme.of(context).errorColor,
+        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+        padding: const EdgeInsets.only(right: 20),
+        alignment: Alignment.centerRight,
+        child: const Icon(
+          Icons.delete,
+          color: Colors.white,
+          size: 40,
+        ),
+      ),
+      onDismissed: (_) {
+        Provider.of<Cart>(
+          context,
+          listen: false,
+        ).removeItem(cartItem.productId);
+      },
+      child: Card(
+        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).textTheme.titleLarge?.color,
+              child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: FittedBox(
+                  child: Text('R\$${cartItem.price}'),
+                ),
               ),
             ),
+            title: Text(cartItem.name),
+            subtitle: Text('${cartItem.price * cartItem.quantity}'),
+            trailing: Text('${cartItem.quantity}X'),
           ),
-          title: Text(cartItem.name),
-          subtitle: Text('${cartItem.price * cartItem.quantity}'),
-          trailing: Text('${cartItem.quantity}X'),
         ),
       ),
     );
