@@ -8,15 +8,15 @@ import 'order.dart';
 class OrderList with ChangeNotifier {
   final List<Order> _items = [];
 
-  get orderList {
-    return {..._items};
+  List<Order> get items {
+    return [..._items];
   }
 
-  get itemsCount {
+  int get itemsCount {
     return _items.length;
   }
 
-  addOrder(Cart cart) {
+  void addOrder(Cart cart) {
     _items.insert(
       0,
       Order(
