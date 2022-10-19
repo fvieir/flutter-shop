@@ -9,8 +9,13 @@ class ProductList with ChangeNotifier {
   // Quando usa return _items, esta passando a referencia, assim os valores
   // podem ser alterados dentro da classe;
   List<Product> get items => [..._items];
+
   List<Product> get favoriteItems {
     return _items.where((prod) => prod.isFavorite).toList();
+  }
+
+  int get itemsCount {
+    return _items.length;
   }
 
   void addProduct(Product product) {

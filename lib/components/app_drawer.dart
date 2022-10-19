@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shop/utils/app_routes.dart';
 
-class MainDrawer extends StatelessWidget {
-  const MainDrawer({super.key});
+class AppDrawer extends StatelessWidget {
+  const AppDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +25,12 @@ class MainDrawer extends StatelessWidget {
             title: const Text('Pedidos'),
             onTap: () =>
                 Navigator.of(context).pushReplacementNamed(AppRoutes.orders),
+          ),
+          ListTile(
+            leading: const Icon(Icons.edit),
+            title: const Text('Gerenciar Produtos'),
+            onTap: () =>
+                Navigator.of(context).pushReplacementNamed(AppRoutes.products),
           )
         ],
       ),

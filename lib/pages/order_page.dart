@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop/components/drawer.dart';
+import 'package:shop/components/app_drawer.dart';
 import 'package:shop/components/order.dart';
 import 'package:shop/models/order_list.dart';
 
@@ -20,7 +20,7 @@ class OrderPage extends StatelessWidget {
           return OrderWidget(order: orders.items[i]);
         },
       ),
-      drawer: const MainDrawer(),
+      drawer: const AppDrawer(),
     );
   }
 }
