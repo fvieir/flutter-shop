@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop/models/product_list.dart';
 import 'package:shop/utils/app_routes.dart';
 
 import '../models/product.dart';
@@ -34,7 +36,33 @@ class ProductItem extends StatelessWidget {
               ),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text(
+                      'Deseja excluir esse produto ?',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    content: const Text('Esse processo é irrerversível!!!'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: const Text('Não'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(true),
+                        child: const Text('Sim'),
+                      ),
+                    ],
+                  ),
+                ).then((value) {
+                  if (value ?? false) {
+                    Provider.of<ProductList>(context, listen: false)
+                        .removeProduct(product);
+                  }
+                });
+              },
               icon: Icon(
                 Icons.delete,
                 color: Theme.of(context).errorColor,
