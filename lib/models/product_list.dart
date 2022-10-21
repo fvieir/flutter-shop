@@ -1,3 +1,6 @@
+import 'dart:html';
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:shop/data/dummy_data.dart';
 import 'package:shop/models/product.dart';
@@ -16,6 +19,17 @@ class ProductList with ChangeNotifier {
 
   int get itemsCount {
     return _items.length;
+  }
+
+  void addProductFromData(Map<String, Object> formData) {
+    final product = Product(
+      id: Random().nextDouble().toString(),
+      name: formData['name'] as String,
+      description: formData['description'] as String,
+      price: formData['price'] as double,
+      imageUrl: formData['imageUrl'] as String,
+    );
+    addProduct(product);
   }
 
   void addProduct(Product product) {
