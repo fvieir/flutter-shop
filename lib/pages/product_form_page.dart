@@ -39,6 +39,26 @@ class _ProductFormPageState extends State<ProductFormPage> {
     setState(() {});
   }
 
+  bool isValidImageUrl(String url) {
+    bool isvalidUrl = Uri.tryParse(url)?.hasAbsolutePath ?? false;
+    bool endWithType = url.toLowerCase().endsWith('.png') ||
+        url.toLowerCase().endsWith('.jpg');
+
+    return isvalidUrl && endWithType;
+  }
+
+  dynamic defaultValidateWithString(String label, int letersLength) {
+    if (label.trim().isEmpty) {
+      return 'Campo nome é obrigatório!';
+    }
+
+    if (label.trim().length < letersLength) {
+      return 'Campo precisa no minimo de $letersLength letras!';
+    }
+
+    return null;
+  }
+
   void _submitForm() {
     final isValid = _formKey.currentState?.validate() ?? false;
 
@@ -83,16 +103,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 onSaved: (name) => _formData['name'] = name as String,
                 validator: (newValue) {
                   final name = newValue ?? '';
-
-                  if (name.trim().isEmpty) {
-                    return 'Campo nome é obrigatório!';
-                  }
-
-                  if (name.trim().length < 3) {
-                    return 'Campo precisa no minimo de 3 letras!';
-                  }
-
-                  return null;
+                  return defaultValidateWithString(name, 3);
                 },
               ),
               TextFormField(
@@ -108,6 +119,16 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 },
                 onSaved: (price) =>
                     _formData['price'] = double.parse(price ?? '0'),
+                validator: (value) {
+                  final priceString = value ?? '';
+                  double price = double.tryParse(priceString) ?? -1;
+
+                  if (price <= 0) {
+                    return 'Informe um valor maior que 0.';
+                  }
+
+                  return null;
+                },
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Descrição'),
@@ -116,6 +137,10 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 focusNode: _descriptionFocus,
                 onSaved: (description) =>
                     _formData['description'] = description as String,
+                validator: (value) {
+                  String description = value ?? '';
+                  return defaultValidateWithString(description, 10);
+                },
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -131,6 +156,15 @@ class _ProductFormPageState extends State<ProductFormPage> {
                       onFieldSubmitted: (_) => _submitForm(),
                       onSaved: (imageUrl) =>
                           _formData['imageUrl'] = imageUrl ?? '',
+                      validator: (value) {
+                        String url = value ?? '';
+
+                        if (!isValidImageUrl(url)) {
+                          return 'Favor informar url válida!';
+                        }
+
+                        return null;
+                      },
                     ),
                   ),
                   Container(
