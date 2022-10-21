@@ -1,4 +1,3 @@
-import 'dart:html';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
@@ -21,19 +20,35 @@ class ProductList with ChangeNotifier {
     return _items.length;
   }
 
-  void addProductFromData(Map<String, Object> formData) {
+  void addProductFromData(Map<String, Object> data) {
+    final hasId = data['id'] != null;
+
     final product = Product(
-      id: Random().nextDouble().toString(),
-      name: formData['name'] as String,
-      description: formData['description'] as String,
-      price: formData['price'] as double,
-      imageUrl: formData['imageUrl'] as String,
+      id: hasId ? data['id'] as String : Random().nextDouble().toString(),
+      name: data['name'] as String,
+      description: data['description'] as String,
+      price: data['price'] as double,
+      imageUrl: data['imageUrl'] as String,
     );
-    addProduct(product);
+
+    if (hasId) {
+      updateProduct(product);
+    } else {
+      addProduct(product);
+    }
   }
 
   void addProduct(Product product) {
     _items.add(product);
     notifyListeners();
+  }
+
+  updateProduct(Product product) {
+    int index = _items.indexWhere((p) => p.id == product.id);
+
+    if (index >= 0) {
+      _items[index] = product;
+      notifyListeners();
+    }
   }
 }
