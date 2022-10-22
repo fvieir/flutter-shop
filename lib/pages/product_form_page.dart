@@ -80,7 +80,11 @@ class _ProductFormPageState extends State<ProductFormPage> {
     return null;
   }
 
-  void _submitForm() {
+  void navigatorPop() {
+    return Navigator.of(context).pop();
+  }
+
+  Future<void> _submitForm() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) {
@@ -91,10 +95,14 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
     setState(() => isLoad = true);
 
-    Provider.of<ProductList>(context, listen: false)
-        .saveProduct(_formData)
-        .catchError((error) {
-      return showDialog<void>(
+    try {
+      await Provider.of<ProductList>(
+        context,
+        listen: false,
+      ).saveProduct(_formData);
+      navigatorPop();
+    } catch (error) {
+      await showDialog<void>(
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text(
@@ -111,12 +119,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
           ],
         ),
       );
-    }).then(
-      (value) {
-        setState(() => isLoad = false);
-        Navigator.of(context).pop();
-      },
-    );
+    } finally {
+      setState(() => isLoad = false);
+    }
   }
 
   @override
