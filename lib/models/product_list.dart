@@ -3,13 +3,11 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'package:shop/data/dummy_data.dart';
 import 'package:shop/models/product.dart';
 
 class ProductList with ChangeNotifier {
-  final List<Product> _items = dummyProducts;
-  final String _baseUrl =
-      'https://shop-cod3r-f5b93-default-rtdb.firebaseio.com/';
+  final List<Product> _items = [];
+  final String _url = 'https://shop-cod3r-f5b93-default-rtdb.firebaseio.com/';
 
   // Retornando uma copia de items.
   // Quando usa return _items, esta passando a referencia, assim os valores
@@ -22,6 +20,27 @@ class ProductList with ChangeNotifier {
 
   int get itemsCount {
     return _items.length;
+  }
+
+  Future<void> loadProducts() async {
+    final response = await http.get(Uri.parse('$_url/product.json'));
+
+    final Map<String, dynamic> data = jsonDecode(response.body);
+
+    data.forEach((productId, product) {
+      _items.add(
+        Product(
+          id: productId,
+          name: product['name'],
+          description: product['description'],
+          price: product['price'],
+          imageUrl: product['imageUrl'],
+          isFavorite: product['isFavorite'],
+        ),
+      );
+    });
+
+    notifyListeners();
   }
 
   Future<void> saveProduct(Map<String, Object> data) {
@@ -44,7 +63,7 @@ class ProductList with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     final response = await http.post(
-      Uri.parse('$_baseUrl/product.json'),
+      Uri.parse('$_url/product.json'),
       body: jsonEncode(
         {
           'name': product.name,
