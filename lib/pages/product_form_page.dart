@@ -109,8 +109,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
             'Algo deu errado',
             style: TextStyle(color: Colors.black87),
           ),
-          content: const Text(
-              'Erro ao salvar produto, entre em contato com suporte'),
+          content: Text(
+              'Erro ao salvar produto, entre em contato com suporte - Erro: $error'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
