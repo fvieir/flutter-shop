@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop/exceptions/http_exceptions.dart';
 import 'package:shop/models/product.dart';
 import '../utils/constants.dart';
 
@@ -99,8 +100,6 @@ class ProductList with ChangeNotifier {
   Future<void> updateProduct(Product product) async {
     int index = _items.indexWhere((p) => p.id == product.id);
 
-    print('$_baseUrl/${product.id}.json');
-
     if (index >= 0) {
       await http.patch(
         Uri.parse('$_baseUrl/${product.id}.json'),
@@ -117,12 +116,37 @@ class ProductList with ChangeNotifier {
     }
   }
 
-  removeProduct(Product product) {
+  Future<void> removeProduct(Product product) async {
     int index = _items.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
-      _items.removeWhere((p) => p.id == product.id);
+      final product = _items[index];
+      _items.remove(product);
       notifyListeners();
+
+      final response = await http
+          .delete(
+        Uri.parse('$_baseUrl/${product.id}.json'),
+      )
+          .catchError(
+        (e) {
+          _errorRequest(index, product);
+        },
+      );
+
+      if (response.statusCode >= 400) {
+        _errorRequest(index, product, response.statusCode);
+      }
     }
+  }
+
+  void _errorRequest(int index, Product product, [response]) {
+    _items.insert(index, product);
+    notifyListeners();
+
+    throw HttpExceptions(
+      msg: 'Algo deu errado! Não foi possível excluir.',
+      statusCode: response,
+    );
   }
 }
