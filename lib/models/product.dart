@@ -24,34 +24,37 @@ class Product with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  Future<void> toggleFavorite() async {
+  void _toggleFavorite() {
     isFavorite = !isFavorite;
     notifyListeners();
 
-    final response = await http
-        .patch(
-      Uri.parse('$_baseUrl/$id.json'),
-      body: jsonEncode(
-        {
-          "isFavorite": isFavorite,
-        },
-      ),
-    )
-        .catchError(
-      (error) {
-        errorToggleFavorite(isFavorite);
-      },
-    );
+    toggleFavorite();
+  }
 
-    if (response.statusCode >= 400) {
-      errorToggleFavorite(isFavorite);
+  Future<void> toggleFavorite() async {
+    try {
+      _toggleFavorite();
+
+      final response = await http.patch(
+        Uri.parse('$_baseUrl/$id.json'),
+        body: jsonEncode(
+          {
+            "isFavorite": isFavorite,
+          },
+        ),
+      );
+
+      if (response.statusCode >= 400) {
+        _toggleFavorite();
+        errorToggleFavorite();
+      }
+    } catch (e) {
+      _toggleFavorite();
+      errorToggleFavorite();
     }
   }
 
-  errorToggleFavorite(isFavoriteReceveid, [statusCode]) {
-    isFavorite = !isFavoriteReceveid;
-    notifyListeners();
-
+  errorToggleFavorite([statusCode]) {
     throw HttpExceptions(msg: 'Algo deu errado!', statusCode: statusCode);
   }
 }
