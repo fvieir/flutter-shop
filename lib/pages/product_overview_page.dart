@@ -21,14 +21,40 @@ class ProductOverviewPage extends StatefulWidget {
 
 class _ProductOverviewPageState extends State<ProductOverviewPage> {
   bool showFavoriteOnly = false;
+  bool isLoad = true;
 
   @override
   void initState() {
     super.initState();
-    Provider.of<ProductList>(
+    loadProducts();
+  }
+
+  loadProducts() async {
+    await Provider.of<ProductList>(
       context,
       listen: false,
-    ).loadProducts();
+    ).loadProducts().catchError((error) {
+      return showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text(
+            'Algo deu errado',
+            style: TextStyle(
+              color: Colors.black87,
+            ),
+          ),
+          content: const Text('Entre em contato com suporte'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Ok'),
+            ),
+          ],
+        ),
+      );
+    }).then((value) {
+      setState(() => isLoad = false);
+    });
   }
 
   @override
@@ -75,7 +101,9 @@ class _ProductOverviewPageState extends State<ProductOverviewPage> {
         ],
       ),
       drawer: const AppDrawer(),
-      body: ProductGrid(showFavoriteOnly: showFavoriteOnly),
+      body: isLoad
+          ? const Center(child: CircularProgressIndicator())
+          : ProductGrid(showFavoriteOnly: showFavoriteOnly),
     );
   }
 }
