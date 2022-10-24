@@ -26,7 +26,12 @@ class _ProductOverviewPageState extends State<ProductOverviewPage> {
   @override
   void initState() {
     super.initState();
-    loadProducts();
+    Provider.of<ProductList>(context, listen: false)
+        .loadProducts()
+        .then((value) {
+      setState(() => isLoad = false);
+    });
+    // loadProducts();
   }
 
   loadProducts() async {
