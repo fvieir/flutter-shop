@@ -24,43 +24,43 @@ class _ProductOverviewPageState extends State<ProductOverviewPage> {
   bool isLoad = true;
 
   @override
-  void initState() {
-    super.initState();
-    Provider.of<ProductList>(context, listen: false)
-        .loadProducts()
-        .then((value) {
-      setState(() => isLoad = false);
-    });
-    // loadProducts();
-  }
+  // void initState() {
+  //   super.initState();
+  //   Provider.of<ProductList>(context, listen: false)
+  //       .loadProducts()
+  //       .then((value) {
+  //     setState(() => isLoad = false);
+  //   });
+  //   // loadProducts();
+  // }
 
-  loadProducts() async {
-    await Provider.of<ProductList>(
-      context,
-      listen: false,
-    ).loadProducts().catchError((error) {
-      return showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text(
-            'Algo deu errado',
-            style: TextStyle(
-              color: Colors.black87,
-            ),
-          ),
-          content: const Text('Entre em contato com suporte'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Ok'),
-            ),
-          ],
-        ),
-      );
-    }).then((value) {
-      setState(() => isLoad = false);
-    });
-  }
+  // loadProducts() async {
+  //   await Provider.of<ProductList>(
+  //     context,
+  //     listen: false,
+  //   ).loadProducts().catchError((error) {
+  //     return showDialog(
+  //       context: context,
+  //       builder: (ctx) => AlertDialog(
+  //         title: const Text(
+  //           'Algo deu errado',
+  //           style: TextStyle(
+  //             color: Colors.black87,
+  //           ),
+  //         ),
+  //         content: const Text('Entre em contato com suporte'),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () => Navigator.of(context).pop(),
+  //             child: const Text('Ok'),
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //   }).then((value) {
+  //     setState(() => isLoad = false);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -106,9 +106,19 @@ class _ProductOverviewPageState extends State<ProductOverviewPage> {
         ],
       ),
       drawer: const AppDrawer(),
-      body: isLoad
-          ? const Center(child: CircularProgressIndicator())
-          : ProductGrid(showFavoriteOnly: showFavoriteOnly),
+      body: FutureBuilder(
+        future: Provider.of<ProductList>(context, listen: false).loadProducts(),
+        builder: ((context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            return ProductGrid(showFavoriteOnly: showFavoriteOnly);
+          }
+        }),
+      ),
+      // body: isLoad
+      //     ? const Center(child: CircularProgressIndicator())
+      //     : ProductGrid(showFavoriteOnly: showFavoriteOnly),
     );
   }
 }
