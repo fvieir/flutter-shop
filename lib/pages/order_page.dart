@@ -12,10 +12,15 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
+  bool isLoad = false;
+
   @override
   void initState() {
     super.initState();
-    Provider.of<OrderList>(context, listen: false).loadOrder();
+    setState(() => isLoad = true);
+    Provider.of<OrderList>(context, listen: false).loadOrder().then((value) {
+      setState(() => isLoad = false);
+    });
   }
 
   @override
@@ -25,12 +30,14 @@ class _OrderPageState extends State<OrderPage> {
       appBar: AppBar(
         title: const Text('Meus pedidos'),
       ),
-      body: ListView.builder(
-        itemCount: orders.itemsCount,
-        itemBuilder: (ctx, i) {
-          return OrderWidget(order: orders.items[i]);
-        },
-      ),
+      body: isLoad
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: orders.itemsCount,
+              itemBuilder: (ctx, i) {
+                return OrderWidget(order: orders.items[i]);
+              },
+            ),
       drawer: const AppDrawer(),
     );
   }
