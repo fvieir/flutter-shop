@@ -14,10 +14,45 @@ class AuthForm extends StatefulWidget {
 
 class _AuthFormState extends State<AuthForm> {
   final _passawordController = TextEditingController();
-  final _authMode = AuthMode.login;
+  var _authMode = AuthMode.login;
   final Map<String, String> _authData = {'email': '', 'password': ''};
+  final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
-  void _submit() {}
+  bool _isLogin() {
+    return _authMode == AuthMode.login;
+  }
+
+  bool _isSignup() {
+    return _authMode == AuthMode.signup;
+  }
+
+  void _siwtchAuthMode() {
+    if (_isLogin()) {
+      setState(() => _authMode = AuthMode.signup);
+    } else {
+      setState(() => _authMode = AuthMode.login);
+    }
+  }
+
+  void _submit() {
+    bool isValid = _formKey.currentState?.validate() ?? false;
+
+    if (!isValid) {
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    _formKey.currentState?.save();
+
+    if(_isLogin()) {
+
+    } else {
+      
+    }
+
+    setState(() => _isLoading = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +64,10 @@ class _AuthFormState extends State<AuthForm> {
       ),
       child: Container(
         padding: const EdgeInsets.all(16),
-        height: 320,
+        height: _isLogin() ? 310 : 400,
         width: deviceSize * 0.75,
         child: Form(
+          key: _formKey,
           child: Column(
             children: [
               TextFormField(
@@ -64,7 +100,7 @@ class _AuthFormState extends State<AuthForm> {
                   return null;
                 },
               ),
-              if (_authMode == AuthMode.signup)
+              if (_isSignup())
                 TextFormField(
                   decoration:
                       const InputDecoration(labelText: 'Confirmar senha'),
@@ -82,19 +118,27 @@ class _AuthFormState extends State<AuthForm> {
                         },
                 ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _submit,
-                style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+              _isLoading
+                  ? const CircularProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: _submit,
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 8,
+                          )),
+                      child: Text(
+                        _isLogin() ? 'ENTRAR' : 'REGISTRAR',
+                      ),
                     ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30,
-                      vertical: 8,
-                    )),
-                child: Text(
-                  _authMode == AuthMode.login ? 'ENTRAR' : 'REGISTRAR',
-                ),
+              const Spacer(),
+              TextButton(
+                onPressed: () => _siwtchAuthMode(),
+                child:
+                    Text(_isLogin() ? 'DESEJA REGISTRAR ?' : 'JA POSSUO LOGIN'),
               ),
             ],
           ),
