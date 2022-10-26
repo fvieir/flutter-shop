@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/exceptions/auth_exception.dart';
 import 'package:shop/models/auth.dart';
 
 enum AuthMode {
@@ -37,21 +38,54 @@ class _AuthFormState extends State<AuthForm> {
     }
   }
 
+  void _showErrorDialog(String msg) {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: const Text(
+            'Ocorreu erro.',
+            style: TextStyle(color: Colors.black87),
+          ),
+          content: Text(msg),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Fechar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _submit() async {
-    bool isValid = _formKey.currentState?.validate() ?? false;
+    final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) {
       return;
     }
 
-    Auth auth = Provider.of(context, listen: false);
     setState(() => _isLoading = true);
-    _formKey.currentState?.save();
 
-    if (_isLogin()) {
-      await auth.login(_authData['email']!, _authData['password']!);
-    } else {
-      await auth.sigunp(_authData['email']!, _authData['password']!);
+    _formKey.currentState?.save();
+    Auth auth = Provider.of(context, listen: false);
+
+    try {
+      if (_isLogin()) {
+        await auth.login(
+          _authData['email']!,
+          _authData['password']!,
+        );
+      } else {
+        await auth.sigunp(
+          _authData['email']!,
+          _authData['password']!,
+        );
+      }
+    } on AuthException catch (error) {
+      print(error.toString());
+      _showErrorDialog(error.toString());
     }
 
     setState(() => _isLoading = false);
@@ -96,8 +130,8 @@ class _AuthFormState extends State<AuthForm> {
                 validator: (value) {
                   final password = value ?? '';
 
-                  if (password.isEmpty || password.length < 5) {
-                    return 'Campo senha deve conter no mínimo 5 caracteres';
+                  if (password.isEmpty || password.length < 6) {
+                    return 'Campo senha deve conter no mínimo 6 caracteres';
                   }
 
                   return null;

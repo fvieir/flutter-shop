@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shop/exceptions/http_exceptions.dart';
+import 'package:shop/exceptions/http_exception.dart';
 import '../utils/constants.dart';
 
 class Product with ChangeNotifier {
@@ -53,6 +53,6 @@ class Product with ChangeNotifier {
   }
 
   errorToggleFavorite([statusCode]) {
-    throw HttpExceptions(msg: 'Algo deu errado!', statusCode: statusCode);
+    throw HttpException(msg: 'Algo deu errado!', statusCode: statusCode);
   }
 }

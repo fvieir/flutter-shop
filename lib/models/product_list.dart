@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'package:shop/exceptions/http_exceptions.dart';
+import 'package:shop/exceptions/http_exception.dart';
 import 'package:shop/models/product.dart';
 import '../utils/constants.dart';
 
@@ -144,7 +144,7 @@ class ProductList with ChangeNotifier {
     _items.insert(index, product);
     notifyListeners();
 
-    throw HttpExceptions(
+    throw HttpException(
       msg: 'Algo deu errado! Não foi possível excluir.',
       statusCode: response,
     );

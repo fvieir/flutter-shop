@@ -1,8 +1,8 @@
-class HttpExceptions implements Exception {
+class HttpException implements Exception {
   final String msg;
   final int? statusCode;
 
-  HttpExceptions({
+  HttpException({
     required this.msg,
     this.statusCode = 400,
   });
