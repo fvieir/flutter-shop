@@ -86,7 +86,7 @@ class _CartButtonBuyState extends State<CartButtonBuy> {
           ? null
           : () async {
               setState(() => _isLoad = true);
-              await widget.orderList.addOrder(widget.cart, auth.userId ?? '');
+              await widget.orderList.addOrder(widget.cart);
               widget.cart.clear();
               setState(() => _isLoad = false);
             },

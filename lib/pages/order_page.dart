@@ -17,8 +17,7 @@ class OrderPage extends StatelessWidget {
         title: const Text('Meus pedidos'),
       ),
       body: FutureBuilder(
-        future: Provider.of<OrderList>(context, listen: false)
-            .loadOrder(auth.userId ?? ''),
+        future: Provider.of<OrderList>(context, listen: false).loadOrder(),
         builder: ((ctx, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
