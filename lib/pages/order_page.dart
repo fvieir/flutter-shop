@@ -19,8 +19,8 @@ class OrderPage extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.error != null) {
-            return const Center(
-              child: Text('Algo deu errado!'),
+            return Center(
+              child: Text('Algo deu errado! ${snapshot.error}'),
             );
           } else {
             return Consumer<OrderList>(
