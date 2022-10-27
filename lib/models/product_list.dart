@@ -8,8 +8,11 @@ import 'package:shop/models/product.dart';
 import '../utils/constants.dart';
 
 class ProductList with ChangeNotifier {
-  final List<Product> _items = [];
+  final String _token;
+  final List<Product> _items;
   final String _baseUrl = Constants.productBaseUrl;
+
+  ProductList(this._token, this._items);
 
   // Retornando uma copia de items.
   // Quando usa return _items, esta passando a referencia, assim os valores
@@ -27,7 +30,7 @@ class ProductList with ChangeNotifier {
   Future<void> loadProducts() async {
     _items.clear();
 
-    final response = await http.get(Uri.parse('$_baseUrl.json'));
+    final response = await http.get(Uri.parse('$_baseUrl.json?auth=$_token'));
 
     if (response.body == 'null') {
       return;
