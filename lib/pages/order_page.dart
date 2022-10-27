@@ -4,17 +4,21 @@ import 'package:shop/components/app_drawer.dart';
 import 'package:shop/components/order.dart';
 import 'package:shop/models/order_list.dart';
 
+import '../models/auth.dart';
+
 class OrderPage extends StatelessWidget {
   const OrderPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Auth auth = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Meus pedidos'),
       ),
       body: FutureBuilder(
-        future: Provider.of<OrderList>(context, listen: false).loadOrder(),
+        future: Provider.of<OrderList>(context, listen: false)
+            .loadOrder(auth.userId ?? ''),
         builder: ((ctx, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

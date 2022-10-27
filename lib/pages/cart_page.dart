@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/components/cart_item.dart';
+import 'package:shop/models/auth.dart';
 import 'package:shop/models/order_list.dart';
 
 import '../models/cart.dart';
@@ -79,12 +80,13 @@ class _CartButtonBuyState extends State<CartButtonBuy> {
 
   @override
   Widget build(BuildContext context) {
+    Auth auth = Provider.of(context);
     return TextButton(
       onPressed: widget.cart.itemCount == 0
           ? null
           : () async {
               setState(() => _isLoad = true);
-              await widget.orderList.addOrder(widget.cart);
+              await widget.orderList.addOrder(widget.cart, auth.userId ?? '');
               widget.cart.clear();
               setState(() => _isLoad = false);
             },

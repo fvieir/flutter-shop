@@ -26,7 +26,7 @@ class OrderList with ChangeNotifier {
     return _items.length;
   }
 
-  Future<void> loadOrder() async {
+  Future<void> loadOrder(String userId) async {
     List<Order> items = [];
 
     final response = await http.get(
@@ -35,7 +35,7 @@ class OrderList with ChangeNotifier {
 
     final Map<String, dynamic> data = jsonDecode(response.body);
 
-    data.forEach((orderId, orderData) {
+    data[userId].forEach((orderId, orderData) {
       items.add(
         Order(
           id: orderId,
@@ -59,11 +59,11 @@ class OrderList with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addOrder(Cart cart) async {
+  Future<void> addOrder(Cart cart, String userId) async {
     final DateTime date = DateTime.now();
 
     final response = await http.post(
-      Uri.parse('$_baseUrl.json?auth=$_token'),
+      Uri.parse('$_baseUrl/$userId.json?auth=$_token'),
       body: jsonEncode(
         {
           'total': cart.totalAmount,
@@ -95,3 +95,29 @@ class OrderList with ChangeNotifier {
     notifyListeners();
   }
 }
+
+
+// {
+//   iqWP5cRaG9fRb6ywjbsJH8EaAus1: 
+//   {
+//     -NFPWzj3PfTkkpKVtoTX: 
+//       {date: 2022-10-27T14:40:29.991, 
+//       products: [{name: Air Jordan 1 Retro, price: 599.99, productId: -NF8xWJPJZDEvbXJ2cjD, quantity: 2}, 
+//       {name: Cacharrel Blusa , price: 59.99, productId: -NF8xp7O2ONt4hCo6wAy, quantity: 1}], 
+//       total: 1259.97}
+//   }, 
+//   j2z5jIkXXsaaTcHMCde4Vy166Zr1: 
+//     {
+//       -NFPWMFOYfHvYUCLFVa6: 
+//         {date: 2022-10-27T14:37:44.186, 
+//         products: [{name: Scarf, price: 29.99, productId: -NF8x0P_sFo4JFZwTEHZ, quantity: 1}, 
+//         {name: Tênis Masculino Caminhada, price: 219.99, productId: -NF8xLlGjtMX5_PwMzqp, quantity: 1}], 
+//         total: 249.98000000000002},
+//     -NFPWdthKoGV_sb9KHLp: 
+//       {date: 2022-10-27T14:39:00.360, 
+//         products: [{name: Panela com alça, price: 99.99, productId: -NF8x8no_fwCgI5yG7Ll, quantity: 1}, 
+//         {name: Air Jordan 1 Retro, price: 599.99, productId: -NF8xWJPJZDEvbXJ2cjD, quantity: 1}, 
+//         {name: Cacharrel Blusa , price: 59.99, productId: -NF8xp7O2ONt4hCo6wAy, quantity: 1}], 
+//         total: 759.97}
+//     }
+// }
