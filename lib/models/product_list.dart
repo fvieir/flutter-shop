@@ -9,10 +9,16 @@ import '../utils/constants.dart';
 
 class ProductList with ChangeNotifier {
   final String _token;
+  final String _userId;
   final List<Product> _items;
   final String _baseUrl = Constants.productBaseUrl;
+  final String _userFavoritesUrl = Constants.userFavoritesUrl;
 
-  ProductList(this._token, this._items);
+  ProductList([
+    this._token = '',
+    this._userId = '',
+    this._items = const [],
+  ]);
 
   // Retornando uma copia de items.
   // Quando usa return _items, esta passando a referencia, assim os valores
@@ -38,7 +44,16 @@ class ProductList with ChangeNotifier {
 
     final Map<String, dynamic> data = jsonDecode(response.body);
 
+    final responsefavorites = await http.get(
+      Uri.parse('$_userFavoritesUrl/$_userId.json?auth=$_token'),
+    );
+
+    final Map<String, dynamic> favData = responsefavorites.body == 'null'
+        ? {}
+        : jsonDecode(responsefavorites.body);
+
     data.forEach((productId, product) {
+      bool isFavorite = favData[productId] ?? false;
       _items.add(
         Product(
           id: productId,
@@ -46,6 +61,7 @@ class ProductList with ChangeNotifier {
           description: product['description'],
           price: product['price'],
           imageUrl: product['imageUrl'],
+          isFavorite: isFavorite,
         ),
       );
     });

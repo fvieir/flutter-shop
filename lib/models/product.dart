@@ -13,7 +13,7 @@ class Product with ChangeNotifier {
   final String imageUrl;
   bool isFavorite;
 
-  final String _baseUrl = Constants.userFavoriteUrl;
+  final String _baseUrl = Constants.userFavoritesUrl;
 
   Product({
     required this.id,
