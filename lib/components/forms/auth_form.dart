@@ -84,7 +84,6 @@ class _AuthFormState extends State<AuthForm> {
         );
       }
     } on AuthException catch (error) {
-      print(error.toString());
       _showErrorDialog(error.toString());
     }
 
