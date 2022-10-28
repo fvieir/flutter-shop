@@ -22,36 +22,36 @@ class _AuthFormState extends State<AuthForm>
   final Map<String, String> _authData = {'email': '', 'password': ''};
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
-  AnimationController? _controller;
-  Animation<Size>? _heigthAnimation;
+  // AnimationController? _controller;
+  // Animation<Size>? _heigthAnimation;
 
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(
-        milliseconds: 300,
-      ),
-    );
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _controller = AnimationController(
+  //     vsync: this,
+  //     duration: const Duration(
+  //       milliseconds: 300,
+  //     ),
+  //   );
 
-    _heigthAnimation = Tween(
-      begin: const Size(double.infinity, 310),
-      end: const Size(double.infinity, 350),
-    ).animate(
-      CurvedAnimation(parent: _controller!, curve: Curves.linear),
-    );
+  //   _heigthAnimation = Tween(
+  //     begin: const Size(double.infinity, 310),
+  //     end: const Size(double.infinity, 350),
+  //   ).animate(
+  //     CurvedAnimation(parent: _controller!, curve: Curves.linear),
+  //   );
 
-    // _heigthAnimation?.addListener(() {
-    //   setState(() {});
-    // });
-  }
+  //   // _heigthAnimation?.addListener(() {
+  //   //   setState(() {});
+  //   // });
+  // }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _controller?.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   _controller?.dispose();
+  // }
 
   bool _isLogin() {
     return _authMode == AuthMode.login;
@@ -64,10 +64,10 @@ class _AuthFormState extends State<AuthForm>
   void _siwtchAuthMode() {
     if (_isLogin()) {
       setState(() => _authMode = AuthMode.signup);
-      _controller?.forward();
+      // _controller?.forward();
     } else {
       setState(() => _authMode = AuthMode.login);
-      _controller?.reverse();
+      // _controller?.reverse();
     }
   }
 
@@ -131,14 +131,13 @@ class _AuthFormState extends State<AuthForm>
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      child: AnimatedBuilder(
-        animation: _heigthAnimation!,
-        builder: (BuildContext context, Widget? child) => Container(
-          padding: const EdgeInsets.all(16),
-          height: _heigthAnimation?.value.height ?? (_isLogin() ? 310 : 400),
-          width: deviceSize * 0.75,
-          child: child,
-        ),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+        padding: const EdgeInsets.all(16),
+        height: (_isLogin() ? 310 : 400),
+        // height: _heigthAnimation?.value.height ?? (_isLogin() ? 310 : 400),
+        width: deviceSize * 0.75,
         child: Form(
           key: _formKey,
           child: Column(
