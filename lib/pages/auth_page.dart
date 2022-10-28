@@ -23,40 +23,45 @@ class AuthPage extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(
-          width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(bottom: 20),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 10,
-                  horizontal: 70,
-                ),
-                transform: Matrix4.rotationZ(-8 * pi / 180)..translate(-10.0),
-                decoration: BoxDecoration(
-                    color: Colors.deepOrange.shade900,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: const [
-                      BoxShadow(
-                        blurRadius: 8.0,
-                        color: Colors.black38,
-                        offset: Offset(5, 0),
-                      )
-                    ]),
-                child: Text(
-                  'Minha Loja',
-                  style: TextStyle(
-                    fontSize: 45,
-                    fontFamily: 'Anton',
-                    color: Theme.of(context).textTheme.titleLarge?.color,
+        Center(
+          child: SingleChildScrollView(
+            child: SizedBox(
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 20),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 70,
+                    ),
+                    transform: Matrix4.rotationZ(-8 * pi / 180)
+                      ..translate(-10.0),
+                    decoration: BoxDecoration(
+                        color: Colors.deepOrange.shade900,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: const [
+                          BoxShadow(
+                            blurRadius: 8.0,
+                            color: Colors.black38,
+                            offset: Offset(5, 0),
+                          )
+                        ]),
+                    child: Text(
+                      'Minha Loja',
+                      style: TextStyle(
+                        fontSize: 45,
+                        fontFamily: 'Anton',
+                        color: Theme.of(context).textTheme.titleLarge?.color,
+                      ),
+                    ),
                   ),
-                ),
+                  const AuthForm(),
+                ],
               ),
-              const AuthForm(),
-            ],
+            ),
           ),
         ),
       ],
