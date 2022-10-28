@@ -42,9 +42,9 @@ class _AuthFormState extends State<AuthForm>
       CurvedAnimation(parent: _controller!, curve: Curves.linear),
     );
 
-    _heigthAnimation?.addListener(() {
-      setState(() {});
-    });
+    // _heigthAnimation?.addListener(() {
+    //   setState(() {});
+    // });
   }
 
   @override
@@ -131,11 +131,14 @@ class _AuthFormState extends State<AuthForm>
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        // height: _isLogin() ? 310 : 400,
-        height: _heigthAnimation?.value.height ?? (_isLogin() ? 310 : 400),
-        width: deviceSize * 0.75,
+      child: AnimatedBuilder(
+        animation: _heigthAnimation!,
+        builder: (BuildContext context, Widget? child) => Container(
+          padding: const EdgeInsets.all(16),
+          height: _heigthAnimation?.value.height ?? (_isLogin() ? 310 : 400),
+          width: deviceSize * 0.75,
+          child: child,
+        ),
         child: Form(
           key: _formKey,
           child: Column(
