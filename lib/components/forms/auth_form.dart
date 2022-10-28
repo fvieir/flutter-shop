@@ -22,36 +22,44 @@ class _AuthFormState extends State<AuthForm>
   final Map<String, String> _authData = {'email': '', 'password': ''};
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
-  // AnimationController? _controller;
-  // Animation<Size>? _heigthAnimation;
+  AnimationController? _controller;
+  Animation<double>? _opacityAnimation;
+  Animation<Offset>? _offesetAnimation;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _controller = AnimationController(
-  //     vsync: this,
-  //     duration: const Duration(
-  //       milliseconds: 300,
-  //     ),
-  //   );
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(
+        milliseconds: 300,
+      ),
+    );
 
-  //   _heigthAnimation = Tween(
-  //     begin: const Size(double.infinity, 310),
-  //     end: const Size(double.infinity, 350),
-  //   ).animate(
-  //     CurvedAnimation(parent: _controller!, curve: Curves.linear),
-  //   );
+    _opacityAnimation = Tween(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(
+      CurvedAnimation(parent: _controller!, curve: Curves.linear),
+    );
 
-  //   // _heigthAnimation?.addListener(() {
-  //   //   setState(() {});
-  //   // });
-  // }
+    _offesetAnimation = Tween(
+      begin: const Offset(0.0, -1.5),
+      end: const Offset(0.0, 0.0),
+    ).animate(
+      CurvedAnimation(parent: _controller!, curve: Curves.linear),
+    );
 
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   _controller?.dispose();
-  // }
+    // _heigthAnimation?.addListener(() {
+    //   setState(() {});
+    // });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller?.dispose();
+  }
 
   bool _isLogin() {
     return _authMode == AuthMode.login;
@@ -64,10 +72,10 @@ class _AuthFormState extends State<AuthForm>
   void _siwtchAuthMode() {
     if (_isLogin()) {
       setState(() => _authMode = AuthMode.signup);
-      // _controller?.forward();
+      _controller?.forward();
     } else {
       setState(() => _authMode = AuthMode.login);
-      // _controller?.reverse();
+      _controller?.reverse();
     }
   }
 
@@ -172,23 +180,37 @@ class _AuthFormState extends State<AuthForm>
                   return null;
                 },
               ),
-              if (_isSignup())
-                TextFormField(
-                  decoration:
-                      const InputDecoration(labelText: 'Confirmar senha'),
-                  obscureText: true,
-                  validator: _authMode == AuthMode.login
-                      ? null
-                      : (value) {
-                          final passwordConfirm = value ?? '';
-
-                          if (passwordConfirm != _passawordController.text) {
-                            return 'Senhas informadas não conferem.';
-                          }
-
-                          return null;
-                        },
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.ease,
+                constraints: BoxConstraints(
+                  minHeight: _isLogin() ? 0 : 40,
+                  maxHeight: _isLogin() ? 0 : 100,
                 ),
+                child: FadeTransition(
+                  opacity: _opacityAnimation!,
+                  child: SlideTransition(
+                    position: _offesetAnimation!,
+                    child: TextFormField(
+                      decoration:
+                          const InputDecoration(labelText: 'Confirmar senha'),
+                      obscureText: true,
+                      validator: _authMode == AuthMode.login
+                          ? null
+                          : (value) {
+                              final passwordConfirm = value ?? '';
+
+                              if (passwordConfirm !=
+                                  _passawordController.text) {
+                                return 'Senhas informadas não conferem.';
+                              }
+
+                              return null;
+                            },
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(height: 20),
               _isLoading
                   ? const CircularProgressIndicator()
