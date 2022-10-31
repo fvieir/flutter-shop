@@ -6,14 +6,17 @@ class OrderListDetails extends StatelessWidget {
   const OrderListDetails({
     super.key,
     required this.order,
+    required this.expand,
   });
 
   final Order order;
+  final bool expand;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: (order.products.length * 24) + 10,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      height: expand ? (order.products.length * 24) + 10 : 0,
       margin: const EdgeInsets.symmetric(
         horizontal: 15,
         vertical: 4,

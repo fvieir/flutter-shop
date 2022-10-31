@@ -19,25 +19,32 @@ class _OrderWidgetState extends State<OrderWidget> {
   bool _expand = false;
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        children: [
-          ListTile(
-            title: Text(widget.order.total.toStringAsFixed(2)),
-            subtitle: Text(
-              DateFormat('dd/MM/yyyy hh:mm').format(widget.order.date),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      height: _expand ? (widget.order.products.length * 24) + 90.00 : 80.00,
+      child: Card(
+        child: Column(
+          children: [
+            ListTile(
+              title: Text(widget.order.total.toStringAsFixed(2)),
+              subtitle: Text(
+                DateFormat('dd/MM/yyyy hh:mm').format(widget.order.date),
+              ),
+              trailing: IconButton(
+                icon: const Icon(Icons.expand_more),
+                onPressed: () {
+                  setState(() {
+                    _expand = !_expand;
+                  });
+                },
+              ),
             ),
-            trailing: IconButton(
-              icon: const Icon(Icons.expand_more),
-              onPressed: () {
-                setState(() {
-                  _expand = !_expand;
-                });
-              },
+            OrderListDetails(
+              order: widget.order,
+              expand: _expand,
             ),
-          ),
-          if (_expand) OrderListDetails(order: widget.order)
-        ],
+          ],
+        ),
       ),
     );
   }
