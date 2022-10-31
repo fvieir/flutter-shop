@@ -185,7 +185,7 @@ class _AuthFormState extends State<AuthForm>
                 curve: Curves.ease,
                 constraints: BoxConstraints(
                   minHeight: _isLogin() ? 0 : 40,
-                  maxHeight: _isLogin() ? 0 : 100,
+                  maxHeight: _isLogin() ? 0 : 80,
                 ),
                 child: FadeTransition(
                   opacity: _opacityAnimation!,
